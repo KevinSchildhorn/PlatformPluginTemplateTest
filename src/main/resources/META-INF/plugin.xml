@@ -6,7 +6,9 @@
     <!-- Product and plugin compatibility requirements -->
     <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
-
+    <depends>org.jetbrains.android</depends>
+    <depends>org.jetbrains.kotlin</depends>
+    <depends>com.intellij.modules.java</depends>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.kevinschildhorn.platformplugintemplatetest.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.kevinschildhorn.platformplugintemplatetest.services.MyProjectService"/>
@@ -16,4 +18,8 @@
         <listener class="com.github.kevinschildhorn.platformplugintemplatetest.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
+
+    <extensions defaultExtensionNs="com.android.tools.idea.wizard.template">
+        <wizardTemplateProvider implementation="com.github.kevinschildhorn.platformplugintemplatetest.WizardTemplateProviderImpl" />
+    </extensions>
 </idea-plugin>
