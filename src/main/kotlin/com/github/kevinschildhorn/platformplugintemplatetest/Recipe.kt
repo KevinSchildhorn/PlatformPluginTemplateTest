@@ -2,8 +2,6 @@ package com.github.kevinschildhorn.platformplugintemplatetest
 
 import com.android.tools.idea.wizard.template.ModuleTemplateData
 import com.android.tools.idea.wizard.template.RecipeExecutor
-import com.android.tools.idea.wizard.template.activityToLayout
-import com.android.tools.idea.wizard.template.extractLetters
 import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotlinDependencies
 import com.github.kevinschildhorn.platformplugintemplatetest.listeners.MyProjectManagerListener.Companion.projectInstance
 import com.intellij.openapi.roots.ProjectRootManager
@@ -12,11 +10,14 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import org.jetbrains.kotlin.idea.KotlinLanguage
 
-fun RecipeExecutor.mviSetup(
+fun RecipeExecutor.kmmSetup(
         moduleData: ModuleTemplateData,
         packageName: String,
         entityName: String,
-        layoutName: String
+        layoutName: String,
+        fragmentName: String,
+        viewModelInclude: Boolean,
+        viewModelName: String
 ) {
     val (projectData) = moduleData
     val project = projectInstance ?: return
@@ -29,11 +30,17 @@ fun RecipeExecutor.mviSetup(
     val directorySrc = PsiManager.getInstance(project).findDirectory(virtSrc)!!
     val directoryRes = PsiManager.getInstance(project).findDirectory(virtRes)!!
 
-    someActivity(packageName, entityName, layoutName, projectData)
-            .save(directorySrc, packageName, "${entityName}sActivity.kt")
+    createFragment(packageName, fragmentName, layoutName, projectData,viewModelInclude,viewModelName)
+            .save(directorySrc, packageName, "${fragmentName}.kt")
 
-    someActivityLayout(packageName, entityName)
+    createFragmentLayout(packageName, fragmentName)
             .save(directoryRes, "layout", "${layoutName}.xml")
+
+    if(viewModelInclude){
+        createViewModel(packageName, viewModelName, entityName, projectData)
+                .save(directorySrc, packageName, "${viewModelName}.kt")
+    }
+
 }
 
 fun String.save(srcDir: PsiDirectory, subDirPath: String, fileName: String) {

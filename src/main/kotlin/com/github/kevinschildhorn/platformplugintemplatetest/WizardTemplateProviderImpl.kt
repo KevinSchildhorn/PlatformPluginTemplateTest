@@ -5,5 +5,5 @@ import com.android.tools.idea.wizard.template.WizardTemplateProvider
 
 class WizardTemplateProviderImpl  : WizardTemplateProvider() {
 
-    override fun getTemplates(): List<Template> = listOf(mviSetupTemplate)
+    override fun getTemplates(): List<Template> = listOf(kmmSetupTemplate)
 }

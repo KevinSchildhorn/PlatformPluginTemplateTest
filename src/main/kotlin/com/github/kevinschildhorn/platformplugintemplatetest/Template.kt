@@ -1,13 +1,12 @@
 package com.github.kevinschildhorn.platformplugintemplatetest
 
 import com.android.tools.idea.wizard.template.*
-import java.io.File
 
-val mviSetupTemplate
+val kmmSetupTemplate
     get() = template {
         revision = 2
-        name = "MY Setup with Activity"
-        description = "Creates a new activity along layout file."
+        name = "KMM Fragment Setup"
+        description = "Creates a new Fragment along layout file and viewModel"
         minApi = 16
         minBuildApi = 16
         category = Category.Other // Check other categories
@@ -18,7 +17,7 @@ val mviSetupTemplate
         val packageNameParam = defaultPackageNameParameter
         val entityName = stringParameter {
             name = "Entity Name"
-            default = "Wurst"
+            default = "XYZ"
             help = "The name of the entity class to create and use in Activity"
             constraints = listOf(Constraint.NONEMPTY)
         }
@@ -31,18 +30,47 @@ val mviSetupTemplate
             suggest = { "${activityToLayout(entityName.value.toLowerCase())}s" }
         }
 
+        val fragmentName = stringParameter {
+            name = "Fragment Name"
+            default = "Fragment"
+            help = "The name of the layout to create for the activity"
+            constraints = listOf(Constraint.UNIQUE, Constraint.NONEMPTY)
+            suggest = { "${entityName.value}Fragment" }
+        }
+
+        val includeViewModelBool = booleanParameter {
+            name = "Include View Model"
+            default = true
+            help = "Whether to create a matching ViewModel"
+        }
+
+        val viewModelName = stringParameter {
+            name = "ViewModel Name"
+            default = "ViewModel"
+            help = "The name of the ViewModel to create for the activity"
+            constraints = listOf(Constraint.UNIQUE, Constraint.NONEMPTY)
+            suggest = { "${entityName.value}ViewModel" }
+        }
+
+
         widgets(
                 TextFieldWidget(entityName),
                 TextFieldWidget(layoutName),
+                TextFieldWidget(fragmentName),
+                CheckBoxWidget(includeViewModelBool),
+                TextFieldWidget(viewModelName),
                 PackageNameWidget(packageNameParam)
         )
 
         recipe = { data: TemplateData ->
-            mviSetup(
+            kmmSetup(
                     data as ModuleTemplateData,
                     packageNameParam.value,
                     entityName.value,
-                    layoutName.value
+                    layoutName.value,
+                    fragmentName.value,
+                    includeViewModelBool.value,
+                    viewModelName.value
             )
         }
     }
