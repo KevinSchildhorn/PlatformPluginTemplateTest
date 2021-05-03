@@ -27,7 +27,7 @@ val kmmFragmentTemplate
         val fragmentName = stringParameter {
             name = "Fragment Name"
             default = "Fragment"
-            help = "The name of the layout to create for the activity"
+            help = "The name of the layout to create for the fragment"
             constraints = listOf(Constraint.UNIQUE, Constraint.NONEMPTY)
             suggest = { "${entityName.value}Fragment" }
         }
@@ -37,7 +37,7 @@ val kmmFragmentTemplate
             default = "my_act"
             help = "The name of the layout to create for the fragment"
             constraints = listOf(Constraint.LAYOUT, Constraint.UNIQUE, Constraint.NONEMPTY)
-            suggest = { "${activityToLayout(entityName.value.toLowerCase())}s" }
+            suggest = { "${entityName.value.toLowerCase()}_fragment" }
         }
         val includeViewModelBool = booleanParameter {
             name = "Include View Model"

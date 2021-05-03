@@ -8,6 +8,7 @@ import com.github.kevinschildhorn.platformplugintemplatetest.model.generators.*
 import com.github.kevinschildhorn.platformplugintemplatetest.save
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiManager
+import com.intellij.openapi.diagnostic.Logger
 
 fun RecipeExecutor.kmmFragmentSetup(
         moduleData: ModuleTemplateData,
@@ -23,33 +24,40 @@ fun RecipeExecutor.kmmFragmentSetup(
 
     addAllKotlinDependencies(moduleData)
 
+    val log = Logger.getInstance("debug")
     val virtualFiles = ProjectRootManager.getInstance(project).contentSourceRoots
-    val virtSrc = virtualFiles.first { it.name.toLowerCase() == "android" && it.path.contains("src") }
-    val virtRes = virtualFiles.first { it.name.toLowerCase() == "android" && it.path.contains("res") }
+
+    log.info("Creating Fragment! $packageName - $entityName - $layoutName - $fragmentName - $viewModelName")
+    virtualFiles.forEach {
+        log.info("${it.name} - ${it.path} - ${it.presentableName}")
+    }
+    val virtSrc = virtualFiles.first { it.path.contains("android/src/main/java") }
+    val virtRes = virtualFiles.first { it.path.contains("android/src/main/res") }
     val directorySrc = PsiManager.getInstance(project).findDirectory(virtSrc)!!
     val directoryRes = PsiManager.getInstance(project).findDirectory(virtRes)!!
 
-    val virtSrc2 = virtualFiles.first { it.name.toLowerCase() == "shared" && it.path.contains("src") }
-    val sharedDirectorySrc = PsiManager.getInstance(project).findDirectory(virtSrc2)!!
+    val iosVirtSrc = virtualFiles.first { it.path.contains("src/iosMain") }
+    val sharedDirectorySrc = PsiManager.getInstance(project).findDirectory(iosVirtSrc)!!
 
     if (viewModelInclude) {
+        log.info("Creating Fragment With ViewModel")
         createFragmentWithViewModel(packageName, fragmentName, layoutName, projectData, viewModelName, entityName)
                 .save(directorySrc, packageName, "${fragmentName}.kt")
 
+        log.info("Creating ViewModel")
         createViewModel(packageName, viewModelName, entityName, projectData)
-                .save(directorySrc, "$packageName/viewmodels", "${viewModelName}.kt")
+                .save(directorySrc, "$packageName.viewmodel", "${viewModelName}.kt")
 
+        log.info("CreatingNativeViewModel")
         createNativeViewModel(packageName, viewModelName, entityName, projectData)
-                .save(sharedDirectorySrc, "iosMain/$packageName/viewmodels", "Native${viewModelName}.kt")
+                .save(sharedDirectorySrc, "$packageName.viewmodels", "Native${viewModelName}.kt")
     }else{
+        log.info("Creating Fragment")
         createFragment(packageName, fragmentName, layoutName, projectData)
                 .save(directorySrc, packageName, "${fragmentName}.kt")
     }
 
+    log.info("Creating Fragment Layout")
     createFragmentLayout(packageName, fragmentName)
             .save(directoryRes, "layout", "${layoutName}.xml")
-
-
-
-
 }

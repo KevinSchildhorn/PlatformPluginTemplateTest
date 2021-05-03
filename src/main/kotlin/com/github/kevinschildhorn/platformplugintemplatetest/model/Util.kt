@@ -2,6 +2,7 @@ package com.github.kevinschildhorn.platformplugintemplatetest
 
 import com.android.tools.idea.wizard.template.Constraint
 import com.android.tools.idea.wizard.template.stringParameter
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFileFactory
 import org.jetbrains.kotlin.idea.KotlinLanguage
@@ -13,6 +14,8 @@ fun String.save(srcDir: PsiDirectory, subDirPath: String, fileName: String) {
                 .getInstance(srcDir.project)
                 .createFileFromText(fileName, KotlinLanguage.INSTANCE, this)
         destDir.add(psiFile)
+        val log = Logger.getInstance("debug")
+        log.info("Saving files file: ${srcDir.toString()} $subDirPath $fileName")
     }catch (exc: Exception) {
         exc.printStackTrace()
     }
