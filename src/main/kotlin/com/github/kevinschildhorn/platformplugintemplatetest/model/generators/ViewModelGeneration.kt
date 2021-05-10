@@ -1,14 +1,10 @@
 package com.github.kevinschildhorn.platformplugintemplatetest.model.generators
 
-import com.android.tools.idea.wizard.template.ProjectTemplateData
-
 fun createViewModel(
         packageName: String,
         viewModelName: String,
-        entityName: String,
-        projectData: ProjectTemplateData
-) = """
-package $packageName
+        entityName: String
+) = """package $packageName.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

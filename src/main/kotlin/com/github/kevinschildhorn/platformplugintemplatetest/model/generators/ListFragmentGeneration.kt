@@ -12,8 +12,7 @@ fun createListFragment(
         viewModelName:String,
         entityName: String
 ):String {
-    var fileString = """
-package $packageName
+    var fileString = """package $packageName
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

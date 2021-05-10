@@ -4,6 +4,7 @@ import com.android.tools.idea.wizard.template.Constraint
 import com.android.tools.idea.wizard.template.stringParameter
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.psi.PsiDirectory
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import org.jetbrains.kotlin.idea.KotlinLanguage
 
@@ -35,4 +36,23 @@ val defaultPackageNameParameter get() = stringParameter {
     default = "com.mycompany.myapp"
     constraints = listOf(Constraint.PACKAGE)
     suggest = { packageName }
+}
+
+
+fun test123(srcDir: PsiDirectory, subDirPath: String): PsiFile{
+    val log = Logger.getInstance("debug")
+    try {
+        srcDir.files.forEach {
+            log.info("Found files: ${srcDir.toString()} $subDirPath ${it.name}")
+            if(it.text.contains("Application()")){
+                log.info("Found Application File")
+                val newFileString = it.text
+                newFileString.replace("module {","module { /*KEVIN TEST!!!*/")
+                log.info("saving Application File: ${it.name}.${it.fileType}")
+                newFileString.save(srcDir, subDirPath, "${it.name}.${it.fileType}")
+            }
+        }
+    }catch (exc: Exception) {
+        exc.printStackTrace()
+    }
 }

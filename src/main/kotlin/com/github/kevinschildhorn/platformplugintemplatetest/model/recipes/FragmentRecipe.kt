@@ -6,9 +6,14 @@ import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotli
 import com.github.kevinschildhorn.platformplugintemplatetest.listeners.MyProjectManagerListener.Companion.projectInstance
 import com.github.kevinschildhorn.platformplugintemplatetest.model.generators.*
 import com.github.kevinschildhorn.platformplugintemplatetest.save
+import com.github.kevinschildhorn.platformplugintemplatetest.test123
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiManager
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.PackageScope.packageScope
+import com.intellij.psi.search.searches.ClassInheritorsSearch
+import com.intellij.psi.util.PsiTreeUtil
 
 fun RecipeExecutor.kmmFragmentSetup(
         moduleData: ModuleTemplateData,
@@ -45,19 +50,25 @@ fun RecipeExecutor.kmmFragmentSetup(
                 .save(directorySrc, packageName, "${fragmentName}.kt")
 
         log.info("Creating ViewModel")
-        createViewModel(packageName, viewModelName, entityName, projectData)
+        createViewModel(packageName, viewModelName, entityName)
                 .save(directorySrc, "$packageName.viewmodel", "${viewModelName}.kt")
 
         log.info("CreatingNativeViewModel")
+        val packageNameNew = packageName.replace(".android","")
         createNativeViewModel(packageName, viewModelName, entityName, projectData)
-                .save(sharedDirectorySrc, "$packageName.viewmodels", "Native${viewModelName}.kt")
+                .save(sharedDirectorySrc, "$packageNameNew.viewmodels", "Native${viewModelName}.kt")
     }else{
         log.info("Creating Fragment")
-        createFragment(packageName, fragmentName, layoutName, projectData)
+        createFragment(packageName, fragmentName, layoutName)
                 .save(directorySrc, packageName, "${fragmentName}.kt")
     }
+
+    test123(directorySrc, packageName)
 
     log.info("Creating Fragment Layout")
     createFragmentLayout(packageName, fragmentName)
             .save(directoryRes, "layout", "${layoutName}.xml")
 }
+
+//https://plugins.jetbrains.com/docs/intellij/faq.html
+//https://github.com/JetBrains/intellij-sdk-code-samples

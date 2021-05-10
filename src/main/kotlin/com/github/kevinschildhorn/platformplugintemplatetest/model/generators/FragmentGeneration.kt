@@ -1,23 +1,17 @@
 package com.github.kevinschildhorn.platformplugintemplatetest.model.generators
 
-import com.android.tools.idea.wizard.template.ProjectTemplateData
-import com.android.tools.idea.wizard.template.extractLetters
-
 fun createFragment(
         packageName: String,
         fragmentName: String,
-        layoutName: String,
-        projectData: ProjectTemplateData
+        layoutName: String
 ):String {
-    val fileString = """
-package $packageName
+    val fileString = """package $packageName
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.koin.android.viewmodel.ext.android.viewModel
-
-import ${projectData.applicationPackage}.R;
 
 class $fragmentName : Fragment() {
     
@@ -26,7 +20,7 @@ class $fragmentName : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.${extractLetters(layoutName.toLowerCase())}, container, false)
+        return inflater.inflate(R.layout.${layoutName.toLowerCase()}, container, false)
     }
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,8 +33,7 @@ class $fragmentName : Fragment() {
 
 fun createFragmentLayout(
         packageName: String,
-        fragmentName: String) = """
-<?xml version="1.0" encoding="utf-8"?>
+        fragmentName: String) = """<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

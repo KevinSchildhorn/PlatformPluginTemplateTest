@@ -36,7 +36,7 @@ fun RecipeExecutor.kmmListFragmentSetup(
             .save(directoryRes, "layout", "${layoutName}.xml")
 
     if (viewModelInclude) {
-        createViewModel(packageName, viewModelName, entityName, projectData)
+        createViewModel(packageName, viewModelName, entityName)
                 .save(directorySrc, packageName, "${viewModelName}.kt")
     }
 }
