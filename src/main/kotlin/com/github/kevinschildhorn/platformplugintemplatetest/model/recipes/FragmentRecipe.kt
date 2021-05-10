@@ -6,14 +6,10 @@ import com.android.tools.idea.wizard.template.impl.activities.common.addAllKotli
 import com.github.kevinschildhorn.platformplugintemplatetest.listeners.MyProjectManagerListener.Companion.projectInstance
 import com.github.kevinschildhorn.platformplugintemplatetest.model.generators.*
 import com.github.kevinschildhorn.platformplugintemplatetest.save
-import com.github.kevinschildhorn.platformplugintemplatetest.test123
+import com.github.kevinschildhorn.platformplugintemplatetest.addKoinModule
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiManager
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.PackageScope.packageScope
-import com.intellij.psi.search.searches.ClassInheritorsSearch
-import com.intellij.psi.util.PsiTreeUtil
 
 fun RecipeExecutor.kmmFragmentSetup(
         moduleData: ModuleTemplateData,
@@ -63,7 +59,8 @@ fun RecipeExecutor.kmmFragmentSetup(
                 .save(directorySrc, packageName, "${fragmentName}.kt")
     }
 
-    test123(directorySrc, packageName)
+    log.info("Adding Koin Module")
+    addKoinModule(directorySrc, packageName, viewModelName)
 
     log.info("Creating Fragment Layout")
     createFragmentLayout(packageName, fragmentName)
