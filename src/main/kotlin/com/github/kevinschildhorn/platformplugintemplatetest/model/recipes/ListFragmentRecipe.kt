@@ -15,6 +15,8 @@ fun RecipeExecutor.kmmListFragmentSetup(
         entityName: String,
         layoutName: String,
         fragmentName: String,
+        adapterName: String,
+        adapterLayoutName: String,
         viewModelInclude: Boolean,
         viewModelName: String
 ) {
@@ -24,19 +26,34 @@ fun RecipeExecutor.kmmListFragmentSetup(
     addAllKotlinDependencies(moduleData)
 
     val virtualFiles = ProjectRootManager.getInstance(project).contentSourceRoots
-    val virtSrc = virtualFiles.first { it.path.contains("src") }
-    val virtRes = virtualFiles.first { it.path.contains("res") }
+    val virtSrc = virtualFiles.first { it.path.contains("android/src/main/java") }
+    val virtRes = virtualFiles.first { it.path.contains("android/src/main/res") }
     val directorySrc = PsiManager.getInstance(project).findDirectory(virtSrc)!!
     val directoryRes = PsiManager.getInstance(project).findDirectory(virtRes)!!
 
+    val iosVirtSrc = virtualFiles.first { it.path.contains("src/iosMain") }
+    val sharedDirectorySrc = PsiManager.getInstance(project).findDirectory(iosVirtSrc)!!
+
+
+    // Fragment
     createListFragment(packageName, fragmentName, layoutName, projectData, viewModelInclude, viewModelName, entityName)
             .save(directorySrc, packageName, "${fragmentName}.kt")
 
     createListFragmentLayout(packageName, fragmentName, entityName)
             .save(directoryRes, "layout", "${layoutName}.xml")
 
-    if (viewModelInclude) {
-        createViewModel(packageName, viewModelName, entityName)
-                .save(directorySrc, packageName, "${viewModelName}.kt")
-    }
+    // Layout
+    createListViewModel(packageName, viewModelName, entityName)
+            .save(directorySrc, packageName, "${viewModelName}.kt")
+
+    val packageNameNew = packageName.replace(".android","")
+    createNativeViewModel(packageName, viewModelName, entityName, projectData)
+            .save(sharedDirectorySrc, "$packageNameNew.viewmodels", "Native${viewModelName}.kt")
+
+    // View Adapter
+    createViewAdapter(packageName, entityName)
+            .save(directorySrc, packageName, "${adapterName}.kt")
+
+    createViewAdapterLayout()
+            .save(directorySrc, "layout", "${adapterLayoutName}.xml")
 }

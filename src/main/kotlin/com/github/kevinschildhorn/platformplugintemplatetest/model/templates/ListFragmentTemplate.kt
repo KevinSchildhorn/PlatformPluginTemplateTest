@@ -31,12 +31,26 @@ val kmmListFragmentTemplate
             constraints = listOf(Constraint.UNIQUE, Constraint.NONEMPTY)
             suggest = { "${entityName.value}ListFragment" }
         }
+        val adapterName = stringParameter {
+            name = "View Adapter Name"
+            default = "ViewAdapter"
+            help = "The name of the view adapter"
+            constraints = listOf(Constraint.UNIQUE, Constraint.NONEMPTY)
+            suggest = { "${entityName.value}ViewAdapter" }
+        }
+        val adapterLayoutName = stringParameter {
+            name = "View Adapter Layout Name"
+            default = "my_view_adapter"
+            help = "The name of the layout to create for tghe view adapter"
+            constraints = listOf(Constraint.LAYOUT, Constraint.UNIQUE, Constraint.NONEMPTY)
+            suggest = { "${entityName.value.toLowerCase()}_view_adapter" }
+        }
         val layoutName = stringParameter {
             name = "Layout Name"
-            default = "my_act"
+            default = "my_fragment"
             help = "The name of the layout to create for the fragment"
             constraints = listOf(Constraint.LAYOUT, Constraint.UNIQUE, Constraint.NONEMPTY)
-            suggest = { "${activityToLayout(entityName.value.toLowerCase())}s" }
+            suggest = { "${entityName.value.toLowerCase()}_fragment" }
         }
         val includeViewModelBool = booleanParameter {
             name = "Include View Model"
@@ -54,6 +68,8 @@ val kmmListFragmentTemplate
                 TextFieldWidget(entityName),
                 TextFieldWidget(fragmentName),
                 TextFieldWidget(layoutName),
+                TextFieldWidget(adapterName),
+                TextFieldWidget(adapterLayoutName),
                 CheckBoxWidget(includeViewModelBool),
                 TextFieldWidget(viewModelName),
                 PackageNameWidget(packageNameParam)
@@ -66,6 +82,8 @@ val kmmListFragmentTemplate
                     entityName.value,
                     layoutName.value,
                     fragmentName.value,
+                    adapterName.value,
+                    adapterLayoutName.value,
                     includeViewModelBool.value,
                     viewModelName.value
             )

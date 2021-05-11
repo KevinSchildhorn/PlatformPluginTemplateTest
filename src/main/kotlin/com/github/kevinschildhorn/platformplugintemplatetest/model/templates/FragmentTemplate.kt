@@ -34,7 +34,7 @@ val kmmFragmentTemplate
 
         val layoutName = stringParameter {
             name = "Layout Name"
-            default = "my_act"
+            default = "my_fragment"
             help = "The name of the layout to create for the fragment"
             constraints = listOf(Constraint.LAYOUT, Constraint.UNIQUE, Constraint.NONEMPTY)
             suggest = { "${entityName.value.toLowerCase()}_fragment" }

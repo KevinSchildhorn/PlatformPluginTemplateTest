@@ -43,24 +43,30 @@ val defaultPackageNameParameter get() = stringParameter {
 }
 
 
-fun addKoinModule(srcDir: PsiDirectory, subDirPath: String, viewModelName:String){
+fun addKoinModule(srcDir: PsiDirectory,
+                  subDirPath: String,
+                  viewModelName:String){
     val log = Logger.getInstance("debug")
     try {
         val destDir = subDirPath.split(".").toDir(srcDir)
         log.info("Searching Files ${destDir.files.size}")
         destDir.files.forEach {
-            log.info("Found files: ${srcDir.toString()} $subDirPath ${it.name}")
-            if(it.text.contains("Application()")){
+            log.info("Found files: $srcDir $subDirPath ${it.name}")
+            if(it.text.contains("Application()") && !it.text.contains(viewModelName)){
                 log.info("Found Application File")
                 var newFileString = it.text
                 log.info("With Text:${it.text}")
+                newFileString = newFileString.replace("import org.koin.dsl.module",
+                    """import org.koin.dsl.module
+                    import $subDirPath.viewmodel.$viewModelName
+                    """.trimMargin())
                 newFileString = newFileString.replace("module {",
                     """module {
-viewModel {
-    $viewModelName(
-    )
-}
-                """.trimMargin())
+                    viewModel {
+                        $viewModelName(
+                        )
+                    }
+                    """.trimMargin())
 
                 CommandProcessor.getInstance().executeCommand(srcDir.project, {
                     log.info("saving Application File: ${it.name}")

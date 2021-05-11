@@ -20,8 +20,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.koin.android.viewmodel.ext.android.viewModel
-import ${projectData.applicationPackage}.android.viewmodel.$viewModelName
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import $packageName.viewmodel.$viewModelName
 
 class $fragmentName : Fragment() {
 

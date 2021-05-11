@@ -27,7 +27,7 @@ class Native$viewModelName (
 
     fun fetch${entityName.capitalize()}(){
         scope.launch {
-            ${entityName.toLowerCase()}Update(/**/) // TODO
+            ${entityName.toLowerCase()}Update(null) // TODO
         }
     }
 
